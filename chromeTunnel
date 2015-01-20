@@ -1,0 +1,45 @@
+#!/bin/bash
+# This will create a SSH tunnel, repoint the forwarding port, and then open the site in Google Chrome
+# It relies on a .ssh/config setting similiar to the following:
+# # Example Box
+# host jenkins
+#   hostname xx.xx.xx.xx
+#   ProxyCommand ssh {Ip address of box to tunnel through} -W %h:%p
+#
+# List of Functions
+  # Kill existing Processes
+  function killProxy()
+  {
+    echo "Killing all Existing Proxies:"
+    sudo kill $(ps aux | grep 'ssh' | grep '\-L'| awk '{print $2}') &>/dev/null
+  }
+
+  # Example Proxy
+  function ExampleProxy()
+  {
+    echo "Creating Example Tunnel:"
+    sudo ssh -f -N -L {example port like 5443}:xx.xx.xx.xx:443 username@xx.xx.xx.xx
+  }
+
+  # Chrome Windows
+  function newChromeWindow()
+  {
+    /usr/bin/open -a "/Applications/Google Chrome.app" -n
+  }
+
+  # Open Example website through Chrome
+  function exampleWindow()
+  { 
+    /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome  'https://127.0.0.1:5443/example'
+  }
+
+# Call Functions
+  # Kill Proxies
+  killProxy
+
+  # Set Up Proxies
+  exampleProxy
+  
+  # Open Chrome Windows
+  newChromeWindow
+  exampleWindow
